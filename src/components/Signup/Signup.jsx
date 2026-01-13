@@ -32,7 +32,7 @@ const Signup = () => {
       const { confirmPassword, ...dataToSend } = formData;
 
       await axios.post(
-        "http://localhost:3000/api/auth/signup",
+        "https://gigflow-backend-8ili.onrender.com/api/auth/signup",
         dataToSend
       );
 

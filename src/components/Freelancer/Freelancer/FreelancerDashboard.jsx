@@ -5,10 +5,10 @@ import FreelancerNavbar from "../FreelancerNavbar/FreelancerNavbar";
 import styles from "./FreelancerDashboard.module.css";
 
 /* ---------------- SOCKET ---------------- */
-const socket = io("http://localhost:3000");
+const socket = io("https://gigflow-backend-8ili.onrender.com");
 
 /* ---------------- CONSTANTS ---------------- */
-const API = "http://localhost:3000/api";
+const API = "https://gigflow-backend-8ili.onrender.com/api";
 const TOKEN = localStorage.getItem("token");
 const userId = localStorage.getItem("userId");
 

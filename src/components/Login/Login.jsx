@@ -21,7 +21,7 @@ const Login = () => {
 
     try {
       const res = await axios.post(
-        "http://localhost:3000/api/auth/login",
+        "https://gigflow-backend-8ili.onrender.com/api/auth/login",
         formData
       );
 

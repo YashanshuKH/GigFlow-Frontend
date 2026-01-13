@@ -3,7 +3,7 @@ import axios from "axios";
 import ClientNavbar from "../Cnavbar/Cnavbar";
 import styles from "../Client/ClientDashboard.module.css";
 
-const API = "http://localhost:3000/api/requirements";
+const API = "https://gigflow-backend-8ili.onrender.com/api/requirements";
 
 const ClientDashboard = () => {
   const [requirements, setRequirements] = useState([]);
@@ -73,7 +73,7 @@ const ClientDashboard = () => {
     if (!bidId) return;
 
     await axios.post(
-      `http://localhost:3000/api/requirements/hire/${bidId}`,
+      `https://gigflow-backend-8ili.onrender.com/api/requirements/hire/${bidId}`,
       {},
       { headers: { Authorization: `Bearer ${token}` } }
     );
