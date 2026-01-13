@@ -4,6 +4,9 @@ import { io } from "socket.io-client";
 import FreelancerNavbar from "../FreelancerNavbar/FreelancerNavbar";
 import styles from "./FreelancerDashboard.module.css";
 
+// ⚠️ Backend port (NOT 5173)
+// const API_BASE = "http://localhost:3000/api";
+// const SOCKET_URL = "http://localhost:3000";
 const API_BASE = "https://gigflow-backend-8ili.onrender.com/api";
 const SOCKET_URL = "https://gigflow-backend-8ili.onrender.com";
 
@@ -20,6 +23,7 @@ api.interceptors.request.use((config) => {
 });
 
 const FreelancerDashboard = () => {
+  /* ---------- STATES ---------- */
   const [requirements, setRequirements] = useState([]);
   const [bids, setBids] = useState([]);
   const [activeReq, setActiveReq] = useState(null);
@@ -40,13 +44,24 @@ const FreelancerDashboard = () => {
   );
 
   const fetchRequirements = async () => {
-    const res = await api.get("/bids/requirements/all");
-    setRequirements(res.data);
+    try {
+      const res = await api.get("/bids/requirements/all");
+      // ✅ Ensure array
+      setRequirements(Array.isArray(res.data) ? res.data : []);
+    } catch (err) {
+      console.error("Fetch requirements error:", err);
+      setRequirements([]);
+    }
   };
 
   const fetchMyBids = async () => {
-    const res = await api.get("/bids/my");
-    setBids(res.data);
+    try {
+      const res = await api.get("/bids/my");
+      setBids(Array.isArray(res.data) ? res.data : []);
+    } catch (err) {
+      console.error("Fetch bids error:", err);
+      setBids([]);
+    }
   };
 
   useEffect(() => {
@@ -73,6 +88,8 @@ const FreelancerDashboard = () => {
   }, [socket]);
 
   const placeBid = async () => {
+    if (!activeReq) return;
+
     await api.post(`/bids/${activeReq._id}`, bidData);
     setBidData({ amount: "", message: "" });
     setActiveReq(null);
@@ -84,25 +101,27 @@ const FreelancerDashboard = () => {
     fetchMyBids();
   };
 
-  const filteredRequirements = useMemo(
-    () =>
-      requirements.filter(
-        (req) =>
-          req.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          req.description.toLowerCase().includes(searchTerm.toLowerCase())
-      ),
-    [requirements, searchTerm]
-  );
+  const filteredRequirements = useMemo(() => {
+    if (!Array.isArray(requirements)) return [];
+
+    return requirements.filter(
+      (req) =>
+        req.title?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        req.description?.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+  }, [requirements, searchTerm]);
 
   return (
     <>
       <FreelancerNavbar />
 
       <div className={styles.container}>
+        {/* 🔔 NOTIFICATION */}
         {notification && (
           <div className={styles.notification}>{notification}</div>
         )}
 
+        {/* 🔍 SEARCH */}
         <div className={styles.searchBox}>
           <input
             type="text"
@@ -112,6 +131,7 @@ const FreelancerDashboard = () => {
           />
         </div>
 
+        {/* 📌 PROJECTS */}
         <h2 className={styles.heading}>Available Projects</h2>
 
         {filteredRequirements.length === 0 && (
@@ -139,6 +159,7 @@ const FreelancerDashboard = () => {
           ))}
         </div>
 
+        {/* 🧾 MY BIDS */}
         <h2 className={styles.heading}>My Bids</h2>
 
         {bids.length === 0 && (
@@ -154,7 +175,9 @@ const FreelancerDashboard = () => {
                   : "Requirement removed"}
               </h4>
 
-              <p><strong>Bid:</strong> ₹{bid.amount}</p>
+              <p>
+                <strong>Bid:</strong> ₹{bid.amount}
+              </p>
               <p className={styles.message}>{bid.message}</p>
 
               {bid.status === "pending" && (
@@ -181,6 +204,7 @@ const FreelancerDashboard = () => {
         </div>
       </div>
 
+      {/* 📝 BID MODAL */}
       {activeReq && (
         <div className={styles.modal}>
           <div className={styles.modalBox}>

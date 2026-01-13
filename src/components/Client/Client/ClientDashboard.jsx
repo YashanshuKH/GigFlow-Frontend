@@ -6,7 +6,8 @@ import styles from "../Client/ClientDashboard.module.css";
 
 const API_BASE = "https://gigflow-backend-8ili.onrender.com/api";
 const SOCKET_URL = "https://gigflow-backend-8ili.onrender.com";
-
+// const API_BASE = "http://localhost:3000/api";
+// const SOCKET_URL = "http://localhost:3000";
 const api = axios.create({
   baseURL: API_BASE,
 });
