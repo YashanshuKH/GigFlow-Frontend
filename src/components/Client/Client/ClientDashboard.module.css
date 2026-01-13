@@ -4,7 +4,6 @@
   padding: 30px;
 }
 
-/* FORM CARD */
 .formCard {
   background: linear-gradient(135deg, #eef2ff, #ffffff);
   padding: 24px;
@@ -45,14 +44,12 @@
   cursor: pointer;
 }
 
-/* GRID */
 .grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
   gap: 24px;
 }
 
-/* CARD */
 .card {
   background: white;
   border-radius: 18px;
@@ -98,7 +95,6 @@
   color: white;
 }
 
-/* BIDS */
 .bids {
   border-top: 1px solid #eee;
   padding-top: 12px;

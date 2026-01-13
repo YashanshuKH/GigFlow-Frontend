@@ -4,11 +4,9 @@ import { io } from "socket.io-client";
 import FreelancerNavbar from "../FreelancerNavbar/FreelancerNavbar";
 import styles from "./FreelancerDashboard.module.css";
 
-/* ---------------- CONFIG ---------------- */
 const API_BASE = "https://gigflow-backend-8ili.onrender.com/api";
 const SOCKET_URL = "https://gigflow-backend-8ili.onrender.com";
 
-/* ---------------- AXIOS INSTANCE ---------------- */
 const api = axios.create({
   baseURL: API_BASE,
 });
@@ -21,9 +19,7 @@ api.interceptors.request.use((config) => {
   return config;
 });
 
-/* ---------------- COMPONENT ---------------- */
 const FreelancerDashboard = () => {
-  /* ---------------- STATES ---------------- */
   const [requirements, setRequirements] = useState([]);
   const [bids, setBids] = useState([]);
   const [activeReq, setActiveReq] = useState(null);
@@ -33,7 +29,6 @@ const FreelancerDashboard = () => {
 
   const userId = localStorage.getItem("userId");
 
-  /* ---------------- SOCKET ---------------- */
   const socket = useMemo(
     () =>
       io(SOCKET_URL, {
@@ -44,7 +39,6 @@ const FreelancerDashboard = () => {
     []
   );
 
-  /* ---------------- API CALLS ---------------- */
   const fetchRequirements = async () => {
     const res = await api.get("/bids/requirements/all");
     setRequirements(res.data);
@@ -55,13 +49,11 @@ const FreelancerDashboard = () => {
     setBids(res.data);
   };
 
-  /* ---------------- INITIAL LOAD ---------------- */
   useEffect(() => {
     fetchRequirements();
     fetchMyBids();
   }, []);
 
-  /* ---------------- SOCKET EVENTS ---------------- */
   useEffect(() => {
     if (userId && userId !== "undefined") {
       socket.emit("register", userId);
@@ -80,7 +72,6 @@ const FreelancerDashboard = () => {
     };
   }, [socket]);
 
-  /* ---------------- ACTIONS ---------------- */
   const placeBid = async () => {
     await api.post(`/bids/${activeReq._id}`, bidData);
     setBidData({ amount: "", message: "" });
@@ -93,7 +84,6 @@ const FreelancerDashboard = () => {
     fetchMyBids();
   };
 
-  /* ---------------- SEARCH FILTER ---------------- */
   const filteredRequirements = useMemo(
     () =>
       requirements.filter(
@@ -104,7 +94,6 @@ const FreelancerDashboard = () => {
     [requirements, searchTerm]
   );
 
-  /* ---------------- UI ---------------- */
   return (
     <>
       <FreelancerNavbar />

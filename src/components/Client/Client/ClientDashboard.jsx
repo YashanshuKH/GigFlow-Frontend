@@ -1,9 +1,23 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import axios from "axios";
+import { io } from "socket.io-client";
 import ClientNavbar from "../Cnavbar/Cnavbar";
 import styles from "../Client/ClientDashboard.module.css";
 
-const API = "https://gigflow-backend-8ili.onrender.com/api/requirements";
+const API_BASE = "https://gigflow-backend-8ili.onrender.com/api";
+const SOCKET_URL = "https://gigflow-backend-8ili.onrender.com";
+
+const api = axios.create({
+  baseURL: API_BASE,
+});
+
+api.interceptors.request.use((config) => {
+  const token = localStorage.getItem("token");
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`;
+  }
+  return config;
+});
 
 const ClientDashboard = () => {
   const [requirements, setRequirements] = useState([]);
@@ -14,15 +28,20 @@ const ClientDashboard = () => {
     deadline: "",
   });
   const [editId, setEditId] = useState(null);
-  const [openReqId, setOpenReqId] = useState(null); // ✅ only one open at a time
+  const [openReqId, setOpenReqId] = useState(null);
 
-  const token = localStorage.getItem("token");
+  const userId = localStorage.getItem("userId");
 
-  /* ---------------- FETCH REQUIREMENTS + BIDS ---------------- */
+  const socket = useMemo(
+    () =>
+      io(SOCKET_URL, {
+        auth: { token: localStorage.getItem("token") },
+      }),
+    []
+  );
+
   const fetchRequirements = async () => {
-    const res = await axios.get(`${API}/my-with-bids`, {
-      headers: { Authorization: `Bearer ${token}` },
-    });
+    const res = await api.get("/requirements/my-with-bids");
     setRequirements(res.data);
   };
 
@@ -30,18 +49,34 @@ const ClientDashboard = () => {
     fetchRequirements();
   }, []);
 
-  /* ---------------- CREATE / UPDATE ---------------- */
+  useEffect(() => {
+    if (userId) {
+      socket.emit("register", userId);
+    }
+
+    socket.on("newBid", (data) => {
+      setRequirements((prev) =>
+        prev.map((req) =>
+          req._id === data.requirementId
+            ? { ...req, bids: [...req.bids, data.bid] }
+            : req
+        )
+      );
+    });
+
+    return () => {
+      socket.off("newBid");
+      socket.disconnect();
+    };
+  }, [socket]);
+
   const submit = async (e) => {
     e.preventDefault();
 
     if (editId) {
-      await axios.put(`${API}/${editId}`, form, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      await api.put(`/requirements/${editId}`, form);
     } else {
-      await axios.post(API, form, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      await api.post("/requirements", form);
     }
 
     setForm({ title: "", description: "", budget: "", deadline: "" });
@@ -49,7 +84,6 @@ const ClientDashboard = () => {
     fetchRequirements();
   };
 
-  /* ---------------- EDIT ---------------- */
   const edit = (r) => {
     setForm({
       title: r.title,
@@ -60,28 +94,16 @@ const ClientDashboard = () => {
     setEditId(r._id);
   };
 
-  /* ---------------- DELETE ---------------- */
   const del = async (id) => {
-    await axios.delete(`${API}/${id}`, {
-      headers: { Authorization: `Bearer ${token}` },
-    });
+    await api.delete(`/requirements/${id}`);
     fetchRequirements();
   };
 
-  /* ---------------- HIRE ---------------- */
   const hireBid = async (bidId) => {
-    if (!bidId) return;
-
-    await axios.post(
-      `https://gigflow-backend-8ili.onrender.com/api/requirements/hire/${bidId}`,
-      {},
-      { headers: { Authorization: `Bearer ${token}` } }
-    );
-
+    await api.post(`/requirements/hire/${bidId}`);
     fetchRequirements();
   };
 
-  /* ---------------- TOGGLE BIDS ---------------- */
   const toggleBids = (reqId) => {
     setOpenReqId(openReqId === reqId ? null : reqId);
   };
@@ -91,7 +113,6 @@ const ClientDashboard = () => {
       <ClientNavbar />
 
       <div className={styles.container}>
-        {/* ---------------- FORM ---------------- */}
         <div className={styles.formCard}>
           <h2>{editId ? "Edit Requirement" : "Post New Requirement"}</h2>
 
@@ -135,7 +156,6 @@ const ClientDashboard = () => {
           </form>
         </div>
 
-        {/* ---------------- REQUIREMENTS ---------------- */}
         <div className={styles.grid}>
           {requirements.map((r) => (
             <div key={r._id} className={styles.card}>
@@ -160,7 +180,6 @@ const ClientDashboard = () => {
                 </button>
               </div>
 
-              {/* ---------------- BIDS (ONLY ONE OPEN) ---------------- */}
               {openReqId === r._id && (
                 <div className={styles.bidsWrapper}>
                   {r.bids.length === 0 && (

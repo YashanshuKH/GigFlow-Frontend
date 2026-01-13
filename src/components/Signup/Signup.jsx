@@ -95,7 +95,6 @@ const Signup = () => {
               required
             />
 
-            {/* ROLE SELECT */}
             <select
               name="role"
               className={styles.select}

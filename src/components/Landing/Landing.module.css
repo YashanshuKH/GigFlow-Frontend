@@ -4,7 +4,6 @@
 }
 
 
-/* Hero */
 .hero {
   padding: 80px 60px;
   background: linear-gradient(135deg, #eef2ff, #ffffff);
@@ -54,7 +53,6 @@
   cursor: pointer;
 }
 
-/* Steps */
 .steps {
   padding: 80px 60px;
   text-align: center;
@@ -78,7 +76,6 @@
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.04);
 }
 
-/* CTA */
 .cta {
   padding: 70px 60px;
   background: #4f46e5;
@@ -90,7 +87,6 @@
   margin: 10px 0 25px;
 }
 
-/* Footer */
 .footer {
   padding: 20px;
   text-align: center;

@@ -7,7 +7,6 @@ const Landing = () => {
     <div className={styles.container}>
       <Lnavbar />
 
-      {/* Hero Section */}
       <section className={styles.hero}>
         <div className={styles.heroContent}>
           <h2>
@@ -33,7 +32,6 @@ const Landing = () => {
         </div>
       </section>
 
-      {/* How It Works */}
       <section className={styles.steps}>
         <h3>How Gigflow Works</h3>
         <div className={styles.stepGrid}>
@@ -52,14 +50,12 @@ const Landing = () => {
         </div>
       </section>
 
-      {/* CTA */}
       <section className={styles.cta}>
         <h3>Ready to Win Your Next Gig?</h3>
         <p>Join thousands of freelancers already using Gigflow.</p>
         <button className={styles.primaryBtn}>Create Free Account</button>
       </section>
 
-      {/* Footer */}
       <footer className={styles.footer}>
         <p>© 2026 Gigflow. All rights reserved.</p>
       </footer>
