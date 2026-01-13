@@ -1,17 +1,27 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import axios from "axios";
 import { io } from "socket.io-client";
 import FreelancerNavbar from "../FreelancerNavbar/FreelancerNavbar";
 import styles from "./FreelancerDashboard.module.css";
 
-/* ---------------- SOCKET ---------------- */
-const socket = io("https://gigflow-backend-8ili.onrender.com");
+/* ---------------- CONFIG ---------------- */
+const API_BASE = "https://gigflow-backend-8ili.onrender.com/api";
+const SOCKET_URL = "https://gigflow-backend-8ili.onrender.com";
 
-/* ---------------- CONSTANTS ---------------- */
-const API = "https://gigflow-backend-8ili.onrender.com/api";
-const TOKEN = localStorage.getItem("token");
-const userId = localStorage.getItem("userId");
+/* ---------------- AXIOS INSTANCE ---------------- */
+const api = axios.create({
+  baseURL: API_BASE,
+});
 
+api.interceptors.request.use((config) => {
+  const token = localStorage.getItem("token");
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`;
+  }
+  return config;
+});
+
+/* ---------------- COMPONENT ---------------- */
 const FreelancerDashboard = () => {
   /* ---------------- STATES ---------------- */
   const [requirements, setRequirements] = useState([]);
@@ -21,20 +31,27 @@ const FreelancerDashboard = () => {
   const [notification, setNotification] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
 
-  /* ---------------- FETCH DATA ---------------- */
+  const userId = localStorage.getItem("userId");
+
+  /* ---------------- SOCKET ---------------- */
+  const socket = useMemo(
+    () =>
+      io(SOCKET_URL, {
+        auth: {
+          token: localStorage.getItem("token"),
+        },
+      }),
+    []
+  );
+
+  /* ---------------- API CALLS ---------------- */
   const fetchRequirements = async () => {
-    const res = await axios.get(
-      `${API}/bids/requirements/all`,
-      { headers: { Authorization: `Bearer ${TOKEN}` } }
-    );
+    const res = await api.get("/bids/requirements/all");
     setRequirements(res.data);
   };
 
   const fetchMyBids = async () => {
-    const res = await axios.get(
-      `${API}/bids/my`,
-      { headers: { Authorization: `Bearer ${TOKEN}` } }
-    );
+    const res = await api.get("/bids/my");
     setBids(res.data);
   };
 
@@ -44,7 +61,7 @@ const FreelancerDashboard = () => {
     fetchMyBids();
   }, []);
 
-  /* ---------------- SOCKET REGISTER + LISTENER ---------------- */
+  /* ---------------- SOCKET EVENTS ---------------- */
   useEffect(() => {
     if (userId && userId !== "undefined") {
       socket.emit("register", userId);
@@ -52,56 +69,51 @@ const FreelancerDashboard = () => {
     }
 
     socket.on("hired", (data) => {
-      console.log("🎉 HIRED EVENT:", data);
       setNotification(`🎉 You have been hired for "${data.projectTitle}"`);
       fetchRequirements();
       fetchMyBids();
     });
 
-    return () => socket.off("hired");
-  }, []);
+    return () => {
+      socket.off("hired");
+      socket.disconnect();
+    };
+  }, [socket]);
 
   /* ---------------- ACTIONS ---------------- */
   const placeBid = async () => {
-    await axios.post(
-      `${API}/bids/${activeReq._id}`,
-      bidData,
-      { headers: { Authorization: `Bearer ${TOKEN}` } }
-    );
-
+    await api.post(`/bids/${activeReq._id}`, bidData);
     setBidData({ amount: "", message: "" });
     setActiveReq(null);
     fetchMyBids();
   };
 
   const deleteBid = async (bidId) => {
-    await axios.delete(
-      `${API}/bids/${bidId}`,
-      { headers: { Authorization: `Bearer ${TOKEN}` } }
-    );
+    await api.delete(`/bids/${bidId}`);
     fetchMyBids();
   };
 
   /* ---------------- SEARCH FILTER ---------------- */
-  const filteredRequirements = requirements.filter(
-    (req) =>
-      req.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      req.description.toLowerCase().includes(searchTerm.toLowerCase())
+  const filteredRequirements = useMemo(
+    () =>
+      requirements.filter(
+        (req) =>
+          req.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          req.description.toLowerCase().includes(searchTerm.toLowerCase())
+      ),
+    [requirements, searchTerm]
   );
 
+  /* ---------------- UI ---------------- */
   return (
     <>
       <FreelancerNavbar />
 
       <div className={styles.container}>
-        {/* 🔔 NOTIFICATION */}
         {notification && (
-          <div className={styles.notification}>
-            {notification}
-          </div>
+          <div className={styles.notification}>{notification}</div>
         )}
 
-        {/* 🔍 SEARCH BAR */}
         <div className={styles.searchBox}>
           <input
             type="text"
@@ -111,7 +123,6 @@ const FreelancerDashboard = () => {
           />
         </div>
 
-        {/* 📌 AVAILABLE PROJECTS */}
         <h2 className={styles.heading}>Available Projects</h2>
 
         {filteredRequirements.length === 0 && (
@@ -139,7 +150,6 @@ const FreelancerDashboard = () => {
           ))}
         </div>
 
-        {/* 🧾 MY BIDS */}
         <h2 className={styles.heading}>My Bids</h2>
 
         {bids.length === 0 && (
@@ -182,7 +192,6 @@ const FreelancerDashboard = () => {
         </div>
       </div>
 
-      {/* 📝 BID MODAL */}
       {activeReq && (
         <div className={styles.modal}>
           <div className={styles.modalBox}>
