@@ -1,0 +1,263 @@
+/* ---------------- LAYOUT ---------------- */
+.container {
+  max-width: 1200px;
+  margin: auto;
+  padding: 20px;
+  background: #f9fafb;
+  min-height: 100vh;
+}
+
+/* ---------------- HEADINGS ---------------- */
+.heading {
+  font-size: 22px;
+  font-weight: 600;
+  margin: 30px 0 15px;
+  color: #111827;
+}
+
+/* ---------------- SEARCH ---------------- */
+.searchBox {
+  margin-bottom: 20px;
+}
+
+.searchBox input {
+  width: 100%;
+  padding: 12px 16px;
+  border-radius: 10px;
+  border: 1px solid #d1d5db;
+  font-size: 15px;
+  outline: none;
+  transition: 0.3s ease;
+}
+
+.searchBox input:focus {
+  border-color: #4f46e5;
+  box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.15);
+}
+
+/* ---------------- GRID ---------------- */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 20px;
+}
+
+/* ---------------- PROJECT CARD ---------------- */
+.card {
+  background: #ffffff;
+  padding: 18px;
+  border-radius: 14px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.05);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.08);
+}
+
+.card h4 {
+  font-size: 18px;
+  font-weight: 600;
+  color: #111827;
+  margin-bottom: 6px;
+}
+
+.card p {
+  font-size: 14px;
+  color: #4b5563;
+  margin-bottom: 10px;
+}
+
+.budget {
+  display: block;
+  font-weight: 600;
+  color: #16a34a;
+  margin-bottom: 12px;
+}
+
+/* ---------------- BUTTONS ---------------- */
+.bidBtn {
+  width: 100%;
+  padding: 10px;
+  background: #4f46e5;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: background 0.2s;
+}
+
+.bidBtn:hover {
+  background: #4338ca;
+}
+
+.assigned {
+  display: inline-block;
+  padding: 6px 10px;
+  background: #e5e7eb;
+  border-radius: 6px;
+  font-size: 13px;
+  color: #374151;
+}
+
+/* ---------------- BIDS ---------------- */
+.bidGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 20px;
+}
+
+.bidCard {
+  background: #ffffff;
+  padding: 16px;
+  border-radius: 14px;
+  border-left: 5px solid #4f46e5;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.bidCard h4 {
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+
+.message {
+  font-size: 14px;
+  color: #4b5563;
+  margin: 8px 0;
+}
+
+.bidActions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* ---------------- STATUS ---------------- */
+.pending {
+  color: #d97706;
+  font-weight: 600;
+}
+
+.hired {
+  color: #16a34a;
+  font-weight: 700;
+}
+
+.rejected {
+  color: #dc2626;
+  font-weight: 600;
+}
+
+/* ---------------- DELETE BUTTON ---------------- */
+.deleteBtn {
+  background: #fee2e2;
+  color: #dc2626;
+  border: none;
+  padding: 6px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 13px;
+}
+
+.deleteBtn:hover {
+  background: #fecaca;
+}
+
+/* ---------------- MODAL ---------------- */
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modalBox {
+  background: #ffffff;
+  padding: 25px;
+  border-radius: 16px;
+  width: 100%;
+  max-width: 420px;
+}
+
+.modalBox h3,
+.modalBox h4 {
+  margin-bottom: 15px;
+}
+
+.modalBox input,
+.modalBox textarea {
+  width: 100%;
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid #d1d5db;
+  margin-bottom: 12px;
+  font-size: 14px;
+}
+
+.modalBox textarea {
+  resize: none;
+  height: 90px;
+}
+
+.modalActions {
+  display: flex;
+  justify-content: space-between;
+}
+
+.modalActions button {
+  flex: 1;
+  padding: 10px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  font-weight: 500;
+}
+
+.modalActions button:first-child {
+  background: #4f46e5;
+  color: white;
+  margin-right: 10px;
+}
+
+.modalActions button:last-child {
+  background: #e5e7eb;
+}
+
+/* ---------------- NOTIFICATION ---------------- */
+.notification {
+  background: #dcfce7;
+  color: #166534;
+  padding: 12px 16px;
+  border-radius: 10px;
+  margin-bottom: 20px;
+  font-weight: 600;
+  animation: slideDown 0.4s ease;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ---------------- EMPTY ---------------- */
+.empty {
+  text-align: center;
+  color: #6b7280;
+  font-size: 14px;
+  margin-top: 20px;
+}

@@ -1,0 +1,67 @@
+.container {
+  min-height: 80vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #f8fafc;
+  font-family: Inter, sans-serif;
+}
+
+.card {
+  background: white;
+  padding: 40px;
+  width: 360px;
+  border-radius: 16px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+}
+
+.card h2 {
+  margin-bottom: 8px;
+}
+
+.card p {
+  color: #555;
+  font-size: 14px;
+}
+
+.form {
+  margin-top: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.form input {
+  padding: 12px 14px;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+  font-size: 14px;
+}
+
+.primaryBtn {
+  margin-top: 10px;
+  background: #4f46e5;
+  color: white;
+  border: none;
+  padding: 12px;
+  border-radius: 8px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.switchText {
+  margin-top: 18px;
+  font-size: 14px;
+  text-align: center;
+}
+
+.switchText span {
+  color: #4f46e5;
+  font-weight: 600;
+  cursor: pointer;
+}
+.link {
+  text-decoration: none;
+  color: #4f46e5;
+  font-weight: 600;
+}

@@ -1,0 +1,99 @@
+.container {
+  font-family: "Inter", sans-serif;
+  color: #111;
+}
+
+
+/* Hero */
+.hero {
+  padding: 80px 60px;
+  background: linear-gradient(135deg, #eef2ff, #ffffff);
+}
+
+.heroContent {
+  max-width: 600px;
+}
+
+.heroContent h2 {
+  font-size: 42px;
+  line-height: 1.2;
+}
+
+.heroContent p {
+  margin-top: 16px;
+  font-size: 16px;
+  color: #444;
+}
+
+.heroButtons {
+  margin-top: 30px;
+  display: flex;
+  gap: 16px;
+}
+.heroButtons1{
+    text-decoration: none;
+    color:rgb(223, 210, 217);
+}
+.primaryBtn {
+  background: #4f46e5;
+  color: white;
+  padding: 14px 24px;
+  border-radius: 10px;
+  border: none;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.secondaryBtn {
+  background: #4f46e5;
+  color: #4f46e5;
+  padding: 14px 24px;
+  border-radius: 10px;
+  border: 2px solid #4f46e5;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+/* Steps */
+.steps {
+  padding: 80px 60px;
+  text-align: center;
+}
+
+.steps h3 {
+  font-size: 32px;
+  margin-bottom: 40px;
+}
+
+.stepGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 24px;
+}
+
+.stepCard {
+  padding: 30px;
+  border-radius: 14px;
+  background: #f9fafb;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.04);
+}
+
+/* CTA */
+.cta {
+  padding: 70px 60px;
+  background: #4f46e5;
+  color: white;
+  text-align: center;
+}
+
+.cta p {
+  margin: 10px 0 25px;
+}
+
+/* Footer */
+.footer {
+  padding: 20px;
+  text-align: center;
+  font-size: 14px;
+  background: #f9fafb;
+}
